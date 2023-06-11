@@ -1,0 +1,37 @@
+Feature: reimbursement
+Scenario 0 :dispatch reimbursement to insurance company
+
+Given a prescription dispense has been completed for a patient with insurance
+And the reimbursement request statement is ready to be dispatched
+When the first day of the month arrives
+Then the reimbursement request is sent to the insurance company
+And the insurance company accepts the reimbursement request without any rejections
+
+Scenario 1: Successful Reimbursement Request is received from insurance company
+ 
+Given a message has been sent for pharmacy 
+When the message is accepted to be reimbursed
+Then the successful reimbursement message is sent to the accounting dept. 
+And the accounting dept. receive reimbursement
+
+Scenario 2: Partial Rejection of Reimbursement Request
+scenario 2.1:resubmit rejected items
+Given items have been sent for pharmacy client with pricing policy reject reason 
+When the client decides to resubmit the reimbursement.
+Then the rejected items are resent to the insurance company
+And the accepted items are sent to the accounting dept. as reimbursed items
+  
+scenario 2.2:dispatch rejected items to accounting dept. as cost
+Given items have been sent for pharmacy client with pricing policy reject reason 
+When the client decides to label rejected items as cost.
+Then the rejected items' price difference is sent to the accounting dept. as cost 
+And the accepted items are sent to the accounting dept. as reimbursed items.
+
+Scenario 3: Complete Rejection of Reimbursement Request
+Given items have been sent for pharmacy client with complete rejection
+When reject reason of request is <patient_is_not_insured>
+Then  we send <bill_invoice> to <patient>
+    Examples:
+    |patient_is_not_insured   |bill_invoice   |patient              |
+    |wrong_company_insurance  |new_request    |new_insurance_company|
+    |all_other_Reason         |dispatch       |accounting           |

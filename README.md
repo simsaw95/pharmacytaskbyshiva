@@ -1,2 +1,2 @@
 # pharmacytaskbyshiva
-task answer for job apply
+answers for job application tasks
